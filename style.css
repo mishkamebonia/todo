@@ -1,0 +1,142 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Kanit', sans-serif;
+}
+
+body {
+    /* background: gray; */
+}
+button, input {
+    display: block;
+    background: transparent;
+    border: 0;
+    outline: 0;
+}
+button {
+    cursor: pointer;
+}
+
+.wrapper {
+    margin: 30px auto;
+    max-width: 600px;
+    /* background: red; */
+}
+.container {
+    padding: 20px;
+}
+
+.card {
+    background-color: #fff;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    border-radius: 8px;
+    /* padding: 10px; */
+}
+
+.bg-image {
+    position: relative;
+    background: url('./flower-bg.jpg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    filter: grayscale(40%);
+    border-radius: 8px 8px 0 0;
+    width: 100%;
+    height: 30vh;
+    z-index: 1;
+}
+
+.text-content {
+    position: absolute;
+    right: 30px;
+    bottom: 20px;
+    text-align: right;
+}
+.month, .time {
+    color: #fff;
+    font-weight: 700;
+    z-index: 10;
+}
+.month {
+    font-size: 18px;
+}
+.time {
+    font-size: 52px;
+}
+
+.card-inner {
+    margin: 10px 0 30px;
+    padding: 30px;
+}
+
+.input-container {
+    display: flex;
+    align-items: stretch;
+    gap: 20px;
+    /* background: red; */
+    width: 100%;
+}
+#input, .add-btn {
+    border-radius: 6px;
+}
+#input {
+    background: #F0F0F0;
+    flex: 1 1 80%;
+    height: 60px;
+    padding: 20px;
+    font-size: 16px;
+}
+#input::placeholder {
+    color: #B7B7B7;
+}
+.add-btn {
+    flex: 1 1 30%;
+    font-size: 24px;
+    background: #98D8AA;
+    color: #fff;
+}
+
+.list-ul {
+    margin: 50px 0;
+}
+
+.list-li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin: 20px 0;
+    /* background: green; */
+}
+.li-title {
+    font-size: 20px;
+    margin-bottom: 5px;
+}
+.li-published {
+    color: #B7B7B7;
+    font-size: 14px;
+}
+
+.button-ul {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+.done, .delete {
+    font-size: 18px;
+}
+.done {
+    color: #98D8AA;
+    border-radius: 50%;
+}
+.done i {
+    border-radius: 50%;
+}
+.checked {
+    background: #98D8AA;
+    color: #fff
+}
+.delete {
+    color: #FF6D60;
+}
