@@ -1,95 +1,156 @@
-const month = document.querySelector('#month')
-const time = document.querySelector('#time')
+const month = document.querySelector("#month");
+const time = document.querySelector("#time");
 
-const input = document.querySelector('#input')
-const submitBtn = document.querySelector('#add-btn')
-const itemsWrapper = document.querySelector('.list-ul')
-// const published = document.querySelector('.li-published')
+const input = document.querySelector("#input");
+const submitBtn = document.querySelector("#add-btn");
+const itemsWrapper = document.querySelector(".list-ul");
 
-let num = 1
-let listArr = []
-
-const display = new Date()
+let id = 0;
+let list = [];
 
 window.onload = calendar;
-function calendar() {
-    time.textContent = displayClock()
-    month.textContent = displayMonth()
-    setTimeout(calendar, 1000)
+
+async function calendar() {
+  await updatetime();
+  await setInterval(updatetime, 1000);
 }
 
-function displayClock() {
-    const h = display.getHours()
-    const m = display.getMinutes()
-    const s = display.getSeconds()
-    return `${("0" + h).substr(-2)}:${("0" + m).substr(-2)}:${("0" + s).substr(-2)}`
+function updatetime() {
+  const date = new Date();
+  time.innerHTML = clock(date);
+  month.innerHTML = weekDay(date);
 }
 
-function displayMonth() {
-    const calendar = display.toLocaleDateString()
-    return calendar
+function clock(date) {
+  let h = date.getHours();
+  let m = date.getMinutes();
+  let session = "AM";
+
+  if (h == 0) {
+    h = 12;
+  }
+  if (h > 12) {
+    h -= 12;
+    session = "PM";
+  }
+
+  h = h < 10 ? "0" + h : h;
+  m = m < 10 ? "0" + m : m;
+
+  let time = `${h}:${m} ${session}`;
+
+  return time;
+}
+
+function weekDay(date) {
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
+  const monthName = date.getMonth();
+  const monthDay = date.getDate();
+  return `${monthNames[monthName]} ${monthDay}`;
+}
+
+keyPress()
+function keyPress() {
+  input.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      submitBtn.click();
+    }
+  })
 }
 
 function createNote() {
-    const div = document.createElement('div')
-    div.classList.add('list-li')
-    div.setAttribute('id', num++)
+  const date = new Date();
 
-    const header = document.createElement('div')
-    header.classList.add('header')
-    div.appendChild(header)
+  itemsWrapper.innerHTML += `
+    <div class="list-li" id="id-${id}">
+    <div class="header">
+        <p class="li-title">
+            ${input.value}
+        </p>
+        <span class="li-published">
+            published at ${clock(date)}
+        </span>
+    </div>
+    <div class="button-ul">
+      <label for="check-${id}" class="done">
+        <i class="icon fa-regular fa-circle"></i>
+      </label>
+        <input type="checkbox" class="checkbox" id="check-${id}">
+        <button class="delete" id="delete-${id}">
+            <i class="fa-regular fa-trash-can"></i>
+        </button>
+    </div>
+    </div>
+  `
 
-    const title = document.createElement('p')
-    title.classList.add('li-title')
-    title.textContent = input.value
-    header.appendChild(title)
-
-    const published = document.createElement('span')
-    published.classList.add('li-published')
-    published.textContent = 'published ' + displayClock()
-    header.appendChild(published)
-
-    const buttonsDiv = document.createElement('div')
-    buttonsDiv.classList.add('button-ul')
-    div.appendChild(buttonsDiv)
-
-    const checkBtn = document.createElement('button')
-    checkBtn.classList.add('done')
-    checkBtn.setAttribute('id', 'done')
-    buttonsDiv.appendChild(checkBtn)
-
-    const checkIcon = document.createElement('i')
-    checkIcon.classList.add('fa-regular', 'fa-circle')
-    checkIcon.setAttribute('id', 'check-icon')
-    checkBtn.appendChild(checkIcon)
-
-    const deleteBtn = document.createElement('button')
-    deleteBtn.classList.add('delete')
-    deleteBtn.setAttribute('id', 'delete')
-    buttonsDiv.appendChild(deleteBtn)
-
-    const deleteIcon = document.createElement('i')
-    deleteIcon.classList.add('fa-regular', 'fa-trash-can')
-    deleteBtn.appendChild(deleteIcon)
-
-    itemsWrapper.appendChild(div)
-
-    checkBtnEvent()
+  id++
 }
 
-function checkBtnEvent() {
-    const div = document.querySelector('.list-li')
-    const checkBtn = document.querySelector('#done')
-    const checkIcon = document.querySelector('#check-icon')
+function checkedItem() {
+  const checkboxes = document.querySelectorAll('.checkbox');
+  const icon = document.querySelectorAll('.icon')
 
-    checkBtn.addEventListener('click', () => {
-        checkIcon.classList.toggle('fa-circle')
-        checkIcon.classList.toggle('fa-circle-check')
-        checkIcon.classList.toggle('checked')
+  checkboxes.forEach((checkbox, index) => {
+    checkbox.addEventListener('change', () => {
+      if (checkbox.checked) {
+        icon[index].classList.remove('fa-regular', 'fa-circle')
+        icon[index].classList.add('fa-solid', 'fa-circle-check')
+      } else {
+        icon[index].classList.remove('fa-solid', 'fa-circle-check')
+        icon[index].classList.add('fa-regular', 'fa-circle')
+      }
+    });
+  });
+}
+
+function removeItem() {
+  const div = document.querySelectorAll('.list-li')
+  const removeBtns = document.querySelectorAll('.delete');
+
+  removeBtns.forEach((btn, index) => {
+    btn.addEventListener('click', () => {
+      div[index].remove()
     })
-
+  })
 }
 
 submitBtn.addEventListener('click', () => {
+  if (input.value == 0) {
+    input.style.outline = '2px solid #ff6d60'
+    input.style.opacity = '0.5'
+    document.querySelector('input[type=text]').style.setProperty("--c", "#ff6d60");
+    document.getElementsByName('note')[0].placeholder = `can't be empty`;
+
+    setTimeout(() => {
+      input.style.outline = 'none'
+      input.style.opacity = '1'
+      document.querySelector('input[type=text]').style.setProperty("--c", "#b7b7b7");
+      document.getElementsByName('note')[0].placeholder = `note`;
+    }, 2000);
+  } else {
     createNote()
+    checkedItem()
+    removeItem()
+    input.style.outline = 'none'
+    input.style.opacity = '1'
+    document.querySelector('input[type=text]').style.setProperty("--c", "#b7b7b7");
+    document.getElementsByName('note')[0].placeholder = `note`;
+  }
+  input.value = ''
+  input.focus()
 })
